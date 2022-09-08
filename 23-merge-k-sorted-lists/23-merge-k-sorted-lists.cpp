@@ -8,37 +8,39 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
-typedef pair<int,ListNode *> node;
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        priority_queue<node,vector<node>,greater<node>>q;
-        for(int i=0;i<lists.size();i++)
-        {
-            if(lists[i])
-            {
-                q.push({lists[i]->val,lists[i]});
+        ListNode *head, *min, *last;
+        int mini;
+        head = new ListNode(100000);
+        last = head;
+        while(!lists.empty()){
+            min = head;
+            mini = -1;
+            for(int i=0;i<lists.size();i++){
+                if(lists[i]==nullptr){
+                    continue;
+                }
+                if(min->val > lists[i]->val){
+                    min = lists[i];
+                    mini = i;
+                }
             }
+            if(mini==-1){
+                break;
+            }
+            last->next = min;
+            last = min;
+            if(min->next!=nullptr){
+                lists[mini] = min->next;
+            }
+            else{
+                lists.erase(lists.begin()+mini);
+            }
+            min->next = nullptr;
         }
-        ListNode *head=NULL,*tmp;
-        while(!q.empty())
-        {
-            auto p=q.top();
-            q.pop();
-            if(!head)
-            {
-                head=p.second;
-            }
-            else
-            {
-                tmp->next=p.second;
-            }
-            tmp=p.second;
-            if(p.second->next)
-            {
-                q.push({p.second->next->val,p.second->next});
-            }
-        }
-        return head;
+        
+        return head->next;
     }
 };
