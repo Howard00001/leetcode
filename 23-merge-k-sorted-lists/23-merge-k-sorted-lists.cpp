@@ -8,37 +8,35 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
+#define pi pair<int, ListNode* >
+
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        ListNode *head, *min, *last;
-        int mini;
+        ListNode *head, *last, *next;
         head = new ListNode(100000);
         last = head;
-        while(!lists.empty()){
-            min = head;
-            mini = -1;
-            for(int i=0;i<lists.size();i++){
-                if(lists[i]==nullptr){
-                    continue;
-                }
-                if(min->val > lists[i]->val){
-                    min = lists[i];
-                    mini = i;
-                }
+        priority_queue<pi, vector<pi>, greater<pi>> minh;
+        
+        for(int i=0;i<lists.size();i++){
+            if(lists[i]!=nullptr){
+                minh.push({lists[i]->val, lists[i]});
             }
-            if(mini==-1){
-                break;
+        }
+        
+        if(minh.size()==0){
+            return nullptr;
+        }
+        
+        while(minh.size()!=0){
+            pi tmp = minh.top();
+            minh.pop();
+            last->next = tmp.second;
+            last = last->next;
+            if(tmp.second->next != nullptr){
+                next = tmp.second->next;
+                minh.push({next->val, next});
             }
-            last->next = min;
-            last = min;
-            if(min->next!=nullptr){
-                lists[mini] = min->next;
-            }
-            else{
-                lists.erase(lists.begin()+mini);
-            }
-            min->next = nullptr;
         }
         
         return head->next;
