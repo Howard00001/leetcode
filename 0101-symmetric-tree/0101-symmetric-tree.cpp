@@ -13,7 +13,8 @@ class Solution {
 public:
     bool dfs2(TreeNode* root, TreeNode* root2){
         if(!root && !root2) return true;
-        if(root && root2 && dfs2(root->left,root2->right) && dfs2(root->right,root2->left) && (root->val == root2->val)) return true;
+        if(root && root2 && (root->val == root2->val))
+            return dfs2(root->left,root2->right) && dfs2(root->right,root2->left) ;
         return false;
     }
     bool isSymmetric(TreeNode* root) {
