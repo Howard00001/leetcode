@@ -16,21 +16,17 @@
 class Solution:
     def isSymmetric(self, root: Optional[TreeNode]) -> bool:
         que = []
-        que.append(root.left)
-        que.append(root.right)
+        que.append([root.left,root.right])
         while(que):
-            left=que[0]
-            que.pop(0)
-            right=que[0]
+            [left,right]=que[0]
             que.pop(0)
             
             if (not left and right) or (left and not right):
                 return False
+            
             if left:
                 if left.val!=right.val:
                     return False
-                que.append(left.left)
-                que.append(right.right)
-                que.append(left.right)
-                que.append(right.left)
+                que.append([left.left,right.right])
+                que.append([left.right,right.left])
         return True
