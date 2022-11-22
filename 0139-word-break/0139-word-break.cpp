@@ -1,19 +1,19 @@
 class Solution {
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
-        int n = s.size();
-        vector<int> dp(n+1,0);
-        dp[n] = 1;
-        unordered_set<string> dict(wordDict.begin(), wordDict.end());
-        for(int i=n-1;i>=0;i--){
-            string candidate = "";
-            for(int j=i;j<n;j++){
-                candidate += s[j];
-                if(candidate.size()>25) break; // maximun leangth of word in dict is 20
-                dp[i] = dp[i] || (dp[j+1] && dict.count(candidate));
-                if(dp[i]) break;
+        vector<bool> dp(s.size()+1,false);
+        unordered_set<string> wordSet(wordDict.begin(),wordDict.end());
+        dp[0]=true;
+        for(int i=1;i<=s.size();i++){
+            for(int j=i;j>=1;j--){
+                if(!dp[j-1] || i-j>=20) continue;
+                string sub = s.substr(j-1,i-j+1);
+                if(wordSet.count(sub)){
+                    dp[i] = true;
+                    break;
+                }
             }
         }
-        return dp[0];
+        return dp[s.size()];
     }
 };
