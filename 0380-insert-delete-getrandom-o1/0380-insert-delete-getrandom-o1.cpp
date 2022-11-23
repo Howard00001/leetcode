@@ -18,10 +18,10 @@ public:
     
     bool remove(int val) {
         if(!id.count(val)) return false;
-        if(id[val]!=ls.size()-1){
-            id[ls[ls.size()-1]]=id[val];
-            swap(ls[ls.size()-1], ls[id[val]]);
-        }
+        // if(id[val]!=ls.size()-1){
+        id[ls[ls.size()-1]]=id[val];
+        swap(ls[ls.size()-1], ls[id[val]]);
+        // }
         id.erase(val);
         ls.pop_back();
         return true;
