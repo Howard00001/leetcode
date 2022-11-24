@@ -19,17 +19,13 @@ public:
         q.push(root);
         while(!q.empty()){
             int sz = q.size();
-            for(int i=0;i<sz-1;i++){
+            for(int i=0;i<sz;i++){
                 tmp = q.front();
                 q.pop();
+                if(i==sz-1) res.push_back(tmp->val);
                 if(tmp->left) q.push(tmp->left);
                 if(tmp->right) q.push(tmp->right);
             }
-            tmp = q.front();
-            q.pop();
-            res.push_back(tmp->val);
-            if(tmp->left) q.push(tmp->left);
-            if(tmp->right) q.push(tmp->right);
         }
         return res;
     }
