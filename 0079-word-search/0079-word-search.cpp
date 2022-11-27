@@ -15,6 +15,14 @@ public:
         return false;
     }
     bool exist(vector<vector<char>>& board, string word) {
+        if(word.size() > board.size() * board[0].size()) return false;
+        int occ[128] = {};
+        for(const auto &v : board) {for(char c : v) {++occ[c];}}
+        for(char c : word) {
+            if(--occ[c] < 0) {return false;}
+        }
+        
+        
         for(int i=0;i<board.size();i++){
             for(int j=0;j<board[0].size();j++){
                 if(backtrack(board, word, i, j, 0)) return true;
