@@ -18,19 +18,16 @@ public:
         for(int i=0;i<n;i++){
             if(degree[i]==1) Q.push(i);
         }
-        cout<<Q.size();
-        int count = 0;
-        while(!Q.empty()){
+        while(n>2){
             int sz = Q.size();
+            n-=sz;
             while(sz--){
                 int cur=Q.front();
                 Q.pop();
-                count++;
                 for(int nx:next[cur]){
                     if(--degree[nx]==1) Q.push(nx);
                 }
             }
-            if(count>=n-2) break;
         }
         
         vector<int> res;
