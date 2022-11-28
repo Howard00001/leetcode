@@ -6,7 +6,7 @@ public:
         
         vector<vector<int>> next(n);
         vector<int> degree(n);
-        for(auto edge:edges){
+        for(auto &edge:edges){
             int a=edge[0], b= edge[1];
             degree[a]++;
             degree[b]++;
