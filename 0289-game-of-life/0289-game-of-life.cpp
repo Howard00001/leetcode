@@ -20,8 +20,8 @@ public:
         int count =0;
         for(int d=0;d<8;d++){
             int x=i+dir[d],y=j+dir[d+1];
-            if(x<0||y<0||x>=board.size()||y>=board[0].size()) continue;
-            if(board[x][y]==1||board[x][y]==2) count++;
+            if(x>=0&&y>=0&&x<board.size()&&y<board[0].size())
+                if(board[x][y]==1||board[x][y]==2) count++;
         }
         if(board[i][j]==0 && count==3) board[i][j] = 3;
         if(board[i][j]==1 && (count<2 || count>3)) board[i][j]=2;
