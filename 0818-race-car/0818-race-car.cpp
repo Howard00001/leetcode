@@ -1,25 +1,18 @@
 class Solution {
 public:
+    int dp[10001];
     int racecar(int target) {
-        int res=0;
-        queue<pair<int,int>> Q;
-        Q.push({0,1});
-        while(!Q.empty()){
-            int sz = Q.size();
-            while(sz--){
-                int pos = Q.front().first;
-                int speed = Q.front().second;
-                Q.pop();
-                //avoid overflow
-                if (abs(pos) > 2 * target) continue;
-                if(pos==target) return res;
-                Q.push({pos+speed, speed*2});
-                //avoid wrong direction
-                if((pos+speed>target && speed>0) || (pos+speed<target && speed<0))
-                    Q.push({pos, (speed>0)?-1:1});
+        if (dp[target] > 0) return dp[target];
+        int n = floor(log2(target)) + 1;
+        if((1<<n)-1 == target) dp[target] = n;
+        else{
+            //case 1
+            dp[target] = n+1+racecar((1<<n)-1-target);
+            //case 2
+            for(int m=0;m<n-1;m++){
+                dp[target] = min(dp[target], n+m+1+racecar(target-(1<<(n-1))+(1<<m)));
             }
-            res++;
         }
-        return -1;
+        return dp[target];
     }
 };
