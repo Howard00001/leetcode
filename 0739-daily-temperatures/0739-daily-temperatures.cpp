@@ -9,10 +9,6 @@ public:
             }
             store.push_back(i);
         }
-        while(!store.empty()){
-            res[store.back()] = 0;
-            store.pop_back();
-        }
         return res;
     }
 };
