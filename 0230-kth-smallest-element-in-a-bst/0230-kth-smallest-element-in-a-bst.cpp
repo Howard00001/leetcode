@@ -15,10 +15,13 @@ public:
     int res;
     
     void trav(TreeNode* root, int k){
-        if(!root || count==k) return;
+        if(!root) return;
         if(root->left) trav(root->left,k);
         count++;
-        if(count == k) res = root->val;
+        if(count == k) {
+            res = root->val;
+            return;
+        }
         if(root->right) trav(root->right,k);
     }
     
