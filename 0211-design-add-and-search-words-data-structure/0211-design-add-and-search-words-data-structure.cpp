@@ -1,37 +1,46 @@
-struct trie{
-    trie *child[26];
-    bool end;
-};
+const int N = 2e5 + 25;
+int trie[N][26];
+bool e[N];
+int node;
+
 class WordDictionary {
-private:
-    trie *root;
 public:
     WordDictionary() {
-        root = new trie();
+        node = 0;
+        memset(trie[0], -1, sizeof trie[0]);
+        memset(e, 0, sizeof e);
     }
     
     void addWord(string word) {
-        trie *n = root;
-        for(auto c:word)
-        {
-            if(n->child[c-'a']==NULL)   n->child[c-'a'] = new trie();
-            n = n->child[c-'a'];
+        int cur = 0;
+        for(int i = 0; i < word.size(); i += 1) {
+            if(trie[cur][word[i] - 'a'] == -1) {
+                trie[cur][word[i] - 'a'] = ++node;
+                memset(trie[node], -1, sizeof trie[node]);
+            }
+            cur = trie[cur][word[i] - 'a'];
         }
-        n->end = true;
+        e[cur] = true;
     }
-    bool dfs(int i, string s, trie *n)
-    {
-        if(i == s.size())   return n->end;
-        if(s[i]=='.')
-        {
-            for(int ind=0;ind<26;ind++)
-                if(n->child[ind] && dfs(i+1,s,n->child[ind]))    return true;
+    
+    bool find(string &word, int cur, int pos) {
+        if(cur == -1) return false;
+        if(pos == word.size()) return e[cur];
+    
+        auto ret = false;
+        char c = word[pos];
+        if(c == '.') {
+            for(int i = 0; i < 26; i += 1) {
+                ret |= find(word, trie[cur][i], pos + 1);
+                if(ret) break;
+            }
+        } else {
+            ret = find(word, trie[cur][c - 'a'], pos + 1);
         }
-        else if(n->child[s[i]-'a'] && dfs(i+1,s,n->child[s[i]-'a']))    return true;
-        return false;
+        return ret;
     }
     bool search(string word) {
-        return dfs(0,word,root);
+        return find(word, 0, 0);
     }
 };
 /**
