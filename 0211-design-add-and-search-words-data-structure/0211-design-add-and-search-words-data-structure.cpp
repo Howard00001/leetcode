@@ -44,9 +44,11 @@ class WordDictionary {
 public:
     //unordered_map<string, bool> buf;
     Node *root;
+    int longest;
     
     WordDictionary() {
         root = new Node();
+        longest= 0;
     }
     
     void addWord(string word) {
@@ -57,9 +59,11 @@ public:
             curr = curr->next[c-'a'];
         }
         curr->isend = true;
+        if(word.length()>longest) longest = word.length();
     }
     
     bool search(string word) {
+        if(word.length()>longest) return false;
         return searchTrie(root, word, 0);
     }
     
