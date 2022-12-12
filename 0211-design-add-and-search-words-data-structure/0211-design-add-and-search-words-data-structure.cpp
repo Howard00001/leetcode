@@ -28,59 +28,67 @@
 // 	}
 // };
 
-class Node {
-public:
-    vector<Node*> next;
-    bool isend;
-    
-    Node(){
-        next = vector<Node*> (26,nullptr);
-        isend = false;
+class TrieNode {
+    public:
+    TrieNode *node[26];
+    bool strPresent;
+    TrieNode() {
+        for(int i = 0; i < 26;i++) {
+            node[i] = NULL;
+        }
+        strPresent = false;
     }
-    
 };
 
 class WordDictionary {
 public:
-    //unordered_map<string, bool> buf;
-    Node *root;
-    int longest;
-    
+    TrieNode *root;
+    int longestWord;
     WordDictionary() {
-        root = new Node();
-        longest= 0;
+        root = new TrieNode();
+        longestWord= 0;        
     }
     
     void addWord(string word) {
-        Node* curr = root;
-        for(auto c:word){
-            if(curr->next[c-'a']==nullptr)
-                curr->next[c-'a'] = new Node();
-            curr = curr->next[c-'a'];
+        TrieNode *current = root;
+        for(int i = 0; i < word.size();i++) {
+            int pos = word[i] - 'a';
+            if(current->node[pos] == NULL) {
+                current->node[pos] = new TrieNode();
+            }
+            current = current->node[pos];
         }
-        curr->isend = true;
-        if(word.length()>longest) longest = word.length();
+        current->strPresent = true;
+        longestWord = longestWord > word.size() ? longestWord :word.size();
     }
     
-    bool search(string word) {
-        if(word.length()>longest) return false;
-        return searchTrie(root, word, 0);
-    }
-    
-    bool searchTrie(Node* curr, string &word, int st){
-        for(int i=st;i<word.length();i++){
-            char c = word[i];
-            if(c=='.'){
-                for(auto p:curr->next){
-                    if(p && searchTrie(p, word, i+1))
-                        return true;
+    bool searchTrie(TrieNode *current, string word) {
+        for(int i=0; i< word.size(); i++) {
+            if(word[i] != '.') {
+                int pos = word[i] - 'a';
+                if(current->node[pos] == NULL) return false;
+                else current = current->node[pos];
+            } else {
+                for(int j = 0; j < 26; j++) {
+                    if(current->node[j] != NULL) {
+                        if(searchTrie(current->node[j], word.substr(i+1))) {
+                            return true;
+                        }
+                    }
                 }
                 return false;
             }
-            if(curr->next[c-'a']==nullptr) return false;
-            curr = curr->next[c-'a'];
         }
-        return curr && curr->isend;
+        if(current->strPresent) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    bool search(string word) {
+        if(word.size() > longestWord) return false;
+        return searchTrie(root, word);
+        
     }
 };
 /**
