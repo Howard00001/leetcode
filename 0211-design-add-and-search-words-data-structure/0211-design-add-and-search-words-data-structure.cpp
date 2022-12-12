@@ -28,68 +28,52 @@
 // 	}
 // };
 
-class TrieNode {
-    public:
-    TrieNode *node[26];
-    bool strPresent;
-    TrieNode() {
-        for(int i = 0; i < 26;i++) {
-            node[i] = NULL;
-        }
-        strPresent = false;
-    }
-};
-
 class WordDictionary {
 public:
-    TrieNode *root;
-    int longestWord;
+    struct TrieNode {
+    public:
+        TrieNode *child[26];
+        bool isWord;
+        TrieNode() : isWord(false) {
+            for (auto &a : child) a = NULL;
+        }
+    };
+    
     WordDictionary() {
         root = new TrieNode();
-        longestWord= 0;        
     }
     
+    // Adds a word into the data structure.
     void addWord(string word) {
-        TrieNode *current = root;
-        for(int i = 0; i < word.size();i++) {
-            int pos = word[i] - 'a';
-            if(current->node[pos] == NULL) {
-                current->node[pos] = new TrieNode();
-            }
-            current = current->node[pos];
+        TrieNode *p = root;
+        for (auto &a : word) {
+            int i = a - 'a';
+            if (!p->child[i]) p->child[i] = new TrieNode();
+            p = p->child[i];
         }
-        current->strPresent = true;
-        longestWord = longestWord > word.size() ? longestWord :word.size();
+        p->isWord = true;
+    }
+
+    // Returns if the word is in the data structure. A word could
+    // contain the dot character '.' to represent any one letter.
+    bool search(string word) {
+        return searchWord(word, root, 0);
     }
     
-    bool searchTrie(TrieNode *current, string word) {
-        for(int i=0; i< word.size(); i++) {
-            if(word[i] != '.') {
-                int pos = word[i] - 'a';
-                if(current->node[pos] == NULL) return false;
-                else current = current->node[pos];
-            } else {
-                for(int j = 0; j < 26; j++) {
-                    if(current->node[j] != NULL) {
-                        if(searchTrie(current->node[j], word.substr(i+1))) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
+    bool searchWord(string &word, TrieNode *p, int i) {
+        if (i == word.size()) return p->isWord;
+        if (word[i] == '.') {
+            for (auto &a : p->child) {
+                if (a && searchWord(word, a, i + 1)) return true;
             }
-        }
-        if(current->strPresent) {
-            return true;
-        } else {
             return false;
+        } else {
+            return p->child[word[i] - 'a'] && searchWord(word, p->child[word[i] - 'a'], i + 1);
         }
     }
-    bool search(string word) {
-        if(word.size() > longestWord) return false;
-        return searchTrie(root, word);
-        
-    }
+    
+private:
+    TrieNode *root;
 };
 /**
  * Your WordDictionary object will be instantiated and called as such:
