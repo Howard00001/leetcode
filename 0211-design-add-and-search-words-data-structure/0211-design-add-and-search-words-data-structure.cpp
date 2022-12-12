@@ -1,47 +1,31 @@
-const int N = 2e5 + 25;
-int trie[N][26];
-bool e[N];
-int node;
-
 class WordDictionary {
-public:
-    WordDictionary() {
-        node = 0;
-        memset(trie[0], -1, sizeof trie[0]);
-        memset(e, 0, sizeof e);
-    }
-    
-    void addWord(string word) {
-        int cur = 0;
-        for(int i = 0; i < word.size(); i += 1) {
-            if(trie[cur][word[i] - 'a'] == -1) {
-                trie[cur][word[i] - 'a'] = ++node;
-                memset(trie[node], -1, sizeof trie[node]);
-            }
-            cur = trie[cur][word[i] - 'a'];
-        }
-        e[cur] = true;
-    }
-    
-    bool find(string &word, int cur, int pos) {
-        if(cur == -1) return false;
-        if(pos == word.size()) return e[cur];
-    
-        auto ret = false;
-        char c = word[pos];
-        if(c == '.') {
-            for(int i = 0; i < 26; i += 1) {
-                ret |= find(word, trie[cur][i], pos + 1);
-                if(ret) break;
-            }
-        } else {
-            ret = find(word, trie[cur][c - 'a'], pos + 1);
-        }
-        return ret;
-    }
-    bool search(string word) {
-        return find(word, 0, 0);
-    }
+  public:
+	vector<vector<string>> dict;
+	unordered_set<string> rec;
+	WordDictionary() {
+		dict = vector<vector<string>>(25);
+	}
+	void addWord(string word) {
+		if (rec.find(word) == rec.end()) {
+			dict[word.length() - 1].push_back(word);
+			rec.insert(word);
+		}
+	}
+	bool search(string word) {
+		int length = word.length();
+		for (int i = 0; i < length; ++i)
+			if (word[i] == '.') {
+				for (int j = 0, k; j < dict[length - 1].size(); ++j) {
+					for (k = 0; k < word.length(); ++k)
+						if (word[k] != dict[length - 1][j][k] && word[k] != '.')
+							break;
+					if (k == length)
+						return true;
+				}
+				return false;
+			}
+		return rec.find(word) != rec.end();
+	}
 };
 /**
  * Your WordDictionary object will be instantiated and called as such:
