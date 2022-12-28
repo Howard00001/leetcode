@@ -2,8 +2,9 @@ class Solution:
     def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
         if not heights:
             return [[]]
+        
         m, n = len(heights), len(heights[0])
-        dp = [[[0 for i in range(n)] for j in range(m)], [[0 for i in range(n)] for j in range(m)]]
+        dp = [[[False for i in range(n)] for j in range(m)], [[False for i in range(n)] for j in range(m)]]
         
         # pa 1: pacific, pa 2: atlantic
         def dfs(pa, i, j, prev):
