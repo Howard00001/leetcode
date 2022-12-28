@@ -1,38 +1,30 @@
 class Solution:
     def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
-        if not heights:
+        if not heights: 
             return [[]]
         
         m, n = len(heights), len(heights[0])
-        dp = [[[False for i in range(n)] for j in range(m)], [[False for i in range(n)] for j in range(m)]]
+        res, dp = [], [0] * (m * n)
         
-        # pa 1: pacific, pa 2: atlantic
-        def dfs(pa, i, j, prev):
-            if dp[pa][i][j] or heights[i][j]<prev:
-                return
-            dp[pa][i][j] = True
+        def dfs(i, j, ap, prev):
+            ij = i * n + j
+            if dp[ij] & ap or heights[i][j] < prev: return
+            dp[ij] += ap
             prev = heights[i][j]
-            if i+1<m:
-                dfs(pa,i+1,j,prev)
-            if i-1>=0:
-                dfs(pa,i-1,j,prev)
-            if j+1<n:
-                dfs(pa,i,j+1,prev)
-            if j-1>=0:
-                dfs(pa,i,j-1,prev)
-        
+            if dp[ij] == 3: res.append([i,j])
+            if i + 1 < m: 
+                dfs(i+1, j, ap, prev)
+            if i > 0: 
+                dfs(i-1, j, ap, prev)
+            if j + 1 < n: 
+                dfs(i, j+1, ap, prev)
+            if j > 0: 
+                dfs(i, j-1, ap, prev)
+                
         for i in range(m):
-            dfs(0, i, 0, -1)
-            dfs(1, i, n-1, -1)
-        
-        
+            dfs(i, 0, 1, -1)
+            dfs(i, n-1, 2, -1)
         for j in range(n):
-            dfs(0, 0, j, -1)
-            dfs(1, m-1, j, -1)
-            
-        res = []
-        for i in range(m):
-            for j in range(n):
-                if dp[0][i][j] and dp[1][i][j]:
-                    res.append([i,j])
-        return res        
+            dfs(0, j, 1, -1)
+            dfs(m-1, j, 2, -1)
+        return res
