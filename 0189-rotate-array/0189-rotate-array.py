@@ -14,13 +14,14 @@ class Solution:
         n = len(nums)
         k = k%n
         
-#         self.reverse(nums,0,n-k-1)
-#         self.reverse(nums,n-k,n-1)
-#         self.reverse(nums,0,n-1)
-        tmp = nums[n-k:n]
-        tmp.extend(nums[0:n-k])
-        for i in range(n):
-            nums[i] = tmp[i]
+        self.reverse(nums,0,n-k-1)
+        self.reverse(nums,n-k,n-1)
+        self.reverse(nums,0,n-1)
+
+        # tmp = nums[n-k:n]
+        # tmp.extend(nums[0:n-k])
+        # for i in range(n):
+        #     nums[i] = tmp[i]
         
         
             
