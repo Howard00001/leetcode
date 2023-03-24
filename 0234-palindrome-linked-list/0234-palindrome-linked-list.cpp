@@ -11,13 +11,22 @@
 class Solution {
 public:
     bool isPalindrome(ListNode* head) {
-        return check(head,head);
-    }
-    bool check(ListNode*& head, ListNode* back){
-        if(back==NULL) return true;
-        bool isPal = check(head, back->next);
-        if(head->val != back->val) return false;
-        head = head->next;
-        return isPal;
+        ListNode *fast=head, *slow=head, *tmp, *prev=NULL;
+        if(!head) return true;
+        while(fast && fast->next){
+            fast = fast->next->next;
+            tmp = slow;
+            slow = slow->next;
+            tmp->next = prev;
+            prev = tmp;
+        }
+        //slow=mid right,prev=mid left)
+        slow = (fast?slow->next:slow);
+        while(slow){
+            if(slow->val!=prev->val) return false;
+            slow = slow->next;
+            prev = prev->next;
+        }
+        return true;
     }
 };
