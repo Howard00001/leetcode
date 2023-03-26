@@ -12,14 +12,24 @@
 class Solution {
 public:
     string tree2str(TreeNode* root) {
-        string ret = to_string(root->val);
-        if(root->left)
-            ret += '('+tree2str(root->left)+')';
+        string res;
+        dfs(root, res);
+        return res;
+    }
+    void dfs(TreeNode *root, string &res){
+        if(!root) return;
+        res += to_string(root->val);
+        if(root->left){
+            res += '(';
+            dfs(root->left, res);
+            res += ')';
+        }
         if(root->right){
             if(!root->left)
-                ret += "()";
-            ret += '('+tree2str(root->right)+')';
+                res += "()";
+            res += '(';
+            dfs(root->right, res);
+            res += ')';
         }
-        return ret;
     }
 };
